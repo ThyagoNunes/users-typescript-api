@@ -1,11 +1,20 @@
 import express from "express";
 import { config } from "dotenv";
 import { routes } from "./routes";
+import { MongoClient } from "./database/mongo";
 
-config();
-const app = express();
+const main = async () => {
+  config();
 
-const port = process.env.PORT || 8000;
+  const app = express();
 
-app.use(routes);
-app.listen(port, () => console.log(`Listening on port ${port}!`));
+  await MongoClient.connect();
+
+  app.use(routes);
+
+  const port = process.env.PORT || 8000;
+
+  app.listen(port, () => console.log(`Listening on port ${port}!`));
+};
+
+main();
