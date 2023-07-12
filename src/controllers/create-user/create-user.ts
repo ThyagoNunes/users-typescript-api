@@ -26,6 +26,19 @@ export class CreateUserController implements ICreateUserController {
         }
       }
 
+      // verificar se o firstName & lastName são validos
+      const sizeFirstName = httpRequest.body!.firstName.length;
+      const sizeLastName = httpRequest.body!.lastName.length;
+
+      if (sizeFirstName || sizeLastName < 2) {
+        return {
+          statusCode: 400,
+          body: "Min char 2",
+        };
+      }
+
+      //
+
       // verificar se o e-mail é válido
       const emailIsValid = validator.isEmail(httpRequest.body!.email);
 
