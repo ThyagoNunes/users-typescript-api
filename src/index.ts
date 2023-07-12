@@ -8,6 +8,8 @@ const main = async () => {
 
   const app = express();
 
+  app.use(express.json());
+
   await MongoClient.connect();
 
   app.use(routes);
