@@ -2,23 +2,21 @@ import validator from "validator";
 import { User } from "../../models/users";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { CreateUserParams, ICreateUserRepository } from "./protocols";
+import { badRequest, created, serverError } from "../helpers";
 
 export class CreateUserController implements IController {
   constructor(private readonly createUserRepository: ICreateUserRepository) {}
 
   async handle(
     httpRequest: HttpRequest<CreateUserParams>
-  ): Promise<HttpResponse<User>> {
+  ): Promise<HttpResponse<User | string>> {
     try {
       // verificar campos obrigatórios
       const requiredFields = ["firstName", "lastName", "email", "password"];
 
       for (const field of requiredFields) {
         if (!httpRequest?.body?.[field as keyof CreateUserParams]?.length) {
-          return {
-            statusCode: 400,
-            body: `Field ${field} is required`,
-          };
+          return badRequest(`Field ${field} is required`);
         }
       }
 
@@ -30,10 +28,7 @@ export class CreateUserController implements IController {
       console.log(sizeLastName);
 
       if (sizeFirstName && sizeLastName < 2) {
-        return {
-          statusCode: 400,
-          body: "Min char 2",
-        };
+        return badRequest("Min char 2");
       }
 
       //
@@ -42,10 +37,7 @@ export class CreateUserController implements IController {
       const emailIsValid = validator.isEmail(httpRequest.body!.email);
 
       if (!emailIsValid) {
-        return {
-          statusCode: 400,
-          body: "E-mail is invalid",
-        };
+        return badRequest("E-mail is invalid");
       }
 
       // verificar se a senha é segura
@@ -60,25 +52,18 @@ export class CreateUserController implements IController {
       );
 
       if (!passwordIsSafe) {
-        return {
-          statusCode: 400,
-          body: "Password min length: 8, min number: 1, min simbols: 1, min upperCase: 1",
-        };
+        return badRequest(
+          "Password min length: 8, min number: 1, min simbols: 1, min upperCase: 1"
+        );
       }
 
       const user = await this.createUserRepository.createUser(
         httpRequest.body!
       );
 
-      return {
-        statusCode: 201,
-        body: user,
-      };
+      return created<User>(user);
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: "Something went wrong",
-      };
+      return serverError();
     }
   }
 }
