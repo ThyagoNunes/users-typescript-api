@@ -30,7 +30,10 @@ export class CreateUserController implements ICreateUserController {
       const sizeFirstName = httpRequest.body!.firstName.length;
       const sizeLastName = httpRequest.body!.lastName.length;
 
-      if (sizeFirstName || sizeLastName < 2) {
+      console.log(sizeFirstName);
+      console.log(sizeLastName);
+
+      if (sizeFirstName && sizeLastName < 2) {
         return {
           statusCode: 400,
           body: "Min char 2",
