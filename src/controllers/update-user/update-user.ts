@@ -1,5 +1,5 @@
 import { User } from "../../models/users";
-import { badRequest, ok, serverError } from "../helpers";
+import { /* badRequest */ ok, serverError } from "../helpers";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { IUpdateUserRepository, UpdateUserParams } from "./protocols";
 
@@ -10,31 +10,65 @@ export class UpdateUserController implements IController {
     httpRequest: HttpRequest<UpdateUserParams>
   ): Promise<HttpResponse<User | string>> {
     try {
-      const id = httpRequest?.params?.id;
-      const body = httpRequest?.body;
+      const id = httpRequest.params?.id;
+      const {
+        firstName,
+        lastName,
+        password,
+        /*  username,
+        email, */
+        phone,
+        bornDay,
+        bornMonth,
+        bornYear,
+        age,
+        height,
+        color,
+        sexual,
+        father,
+        mother,
+        son,
+        country,
+        state,
+        city,
+        address,
+        numberAddress,
+        zipCode,
+      } = httpRequest.body ?? {};
 
-      if (!body) {
-        badRequest("Missing fields");
-      }
+      const allowedFieldsToUpdate = {
+        firstName,
+        lastName,
+        password,
+        phone,
+        bornDay,
+        bornMonth,
+        bornYear,
+        age,
+        height,
+        color,
+        sexual,
+        father,
+        mother,
+        son,
+        country,
+        state,
+        city,
+        address,
+        numberAddress,
+        zipCode,
+      };
 
-      if (!id) {
-        badRequest("Missing user id");
-      }
+      console.log(allowedFieldsToUpdate);
 
-      const allowedFieldsToUpdate: (keyof UpdateUserParams)[] = [
-        "firstName",
-        "lastName",
-        "password",
-      ];
-      const someFieldIsNotAllowedToUpdate = Object.keys(body!).some(
-        (key) => !allowedFieldsToUpdate.includes(key as keyof UpdateUserParams)
+      /*  if (username !== undefined || email !== undefined) {
+        return badRequest("Cannot change username or email");
+      } */
+
+      const user = await this.updateUserRepository.updateUser(
+        id,
+        allowedFieldsToUpdate
       );
-
-      if (someFieldIsNotAllowedToUpdate) {
-        badRequest("Some received field is not allowed");
-      }
-
-      const user = await this.updateUserRepository.updateUser(id, body!);
 
       return ok<User>(user);
     } catch (error) {

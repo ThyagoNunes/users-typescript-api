@@ -1,4 +1,4 @@
-import { MongoClient as Mongo, Db } from "mongodb";
+/* import { MongoClient as Mongo, Db } from "mongodb";
 
 export const MongoClient = {
   client: undefined as unknown as Mongo,
@@ -18,3 +18,4 @@ export const MongoClient = {
     console.log("Connected to mongodb!");
   },
 };
+ */

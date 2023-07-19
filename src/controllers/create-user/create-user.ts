@@ -2,7 +2,7 @@ import validator from "validator";
 import { User } from "../../models/users";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { CreateUserParams, ICreateUserRepository } from "./protocols";
-import { badRequest, created, serverError } from "../helpers";
+import { badRequest, created } from "../helpers";
 
 export class CreateUserController implements IController {
   constructor(private readonly createUserRepository: ICreateUserRepository) {}
@@ -11,36 +11,42 @@ export class CreateUserController implements IController {
     httpRequest: HttpRequest<CreateUserParams>
   ): Promise<HttpResponse<User | string>> {
     try {
-      // verificar campos obrigatórios
-      const requiredFields = ["firstName", "lastName", "email", "password"];
+      if (!httpRequest.body) {
+        return badRequest("Body is requied");
+      }
+      /* fields are required */
+      const requiredFields = [
+        "firstName",
+        "lastName",
+        "username",
+        "email",
+        "password",
+        "phone",
+      ];
 
-      for (const field of requiredFields) {
-        if (!httpRequest?.body?.[field as keyof CreateUserParams]?.length) {
+      /* for (const field of requiredFields) {
+        if (!httpRequest?.body?.[field as keyof CreateUserParams]?.len) {
           return badRequest(`Field ${field} is required`);
         }
-      }
+      } */
+      if ([httpRequest.body].includes(httpRequest.body))
+        console.log(requiredFields);
 
-      // verificar se o firstName & lastName são validos
+      // Verify if size first and lastName is valid
       const sizeFirstName = httpRequest.body!.firstName.length;
       const sizeLastName = httpRequest.body!.lastName.length;
-
-      console.log(sizeFirstName);
-      console.log(sizeLastName);
 
       if (sizeFirstName && sizeLastName < 2) {
         return badRequest("Min char 2");
       }
-
-      //
-
-      // verificar se o e-mail é válido
+      // Verify if email is secure
       const emailIsValid = validator.isEmail(httpRequest.body!.email);
 
       if (!emailIsValid) {
         return badRequest("E-mail is invalid");
       }
 
-      // verificar se a senha é segura
+      // Verify if password is secure
       const passwordIsSafe = validator.isStrongPassword(
         httpRequest.body!.password,
         {
@@ -57,13 +63,18 @@ export class CreateUserController implements IController {
         );
       }
 
-      const user = await this.createUserRepository.createUser(
-        httpRequest.body!
+      console.log(
+        `foi pro repository usuário: ${httpRequest?.body?.firstName}`
       );
 
+      const user = await this.createUserRepository.createUser(httpRequest.body);
+
+      console.log(`user: ${user}`);
+      console.log("retornou do banco");
       return created<User>(user);
     } catch (error) {
-      return serverError();
+      console.log("this inside from catch");
+      return badRequest("sexo");
     }
   }
 }

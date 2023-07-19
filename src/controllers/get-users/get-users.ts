@@ -10,7 +10,7 @@ export class GetUsersController implements IController {
     try {
       // validar requisição
       // direcionar chamada para o Repository
-      const users = await this.getUsersRepository.getUSer();
+      const users = await this.getUsersRepository.getUsers();
 
       return ok<User[]>(users);
     } catch (error) {

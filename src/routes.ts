@@ -1,29 +1,28 @@
 import { Router } from "express";
-import { GetUsersController } from "./controllers/get-users/get-users";
-import { MongoGetUsersRepository } from "./repositories/get-users/mongo-get-users";
-import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user";
-import { CreateUserController } from "./controllers/create-user/create-user";
-import { MongoUpdateRepository } from "./repositories/update-user/mongo-update-user";
-import { UpdateUserController } from "./controllers/update-user/update-user";
-import { MongoDeleteUserRepository } from "./repositories/delete-user/mongo-delete-user";
-import { DeleteUserController } from "./controllers/delete-user/delete-user";
-import { MongoGetUserRepository } from "./repositories/get-user/mongo-get-user";
 import { GetUserController } from "./controllers/get-user/get-user";
+import { GetUsersController } from "./controllers/get-users/get-users";
+import { CreateUserController } from "./controllers/create-user/create-user";
+import { UpdateUserController } from "./controllers/update-user/update-user";
+import { DeleteUserController } from "./controllers/delete-user/delete-user";
+import { PrismaUpdateRepository } from "./repositories/update-user/prisma-update-user";
+import { PrismaGetUserRepository } from "./repositories/get-user/prisma-get-user";
+import { PrismaGetUsersRepository } from "./repositories/get-users/prisma-get-users";
+import { PrismaCreateUserRepository } from "./repositories/create-user/prisma-create-user";
+import { PrismaDeleteUserRepository } from "./repositories/delete-user/prisma-delete-user";
 
 const routes = Router();
 
 routes.get("/users", async (req, res) => {
-  const mongoGetUsersRepoository = new MongoGetUsersRepository();
-  const getUsersController = new GetUsersController(mongoGetUsersRepoository);
+  const prismaGetUsersRepoository = new PrismaGetUsersRepository();
+  const getUsersController = new GetUsersController(prismaGetUsersRepoository);
 
   const { statusCode, body } = await getUsersController.handle();
-
   res.status(statusCode).send(body);
 });
 
 routes.get("/users/:id", async (req, res) => {
-  const mongoGetUserRepository = new MongoGetUserRepository();
-  const getUserController = new GetUserController(mongoGetUserRepository);
+  const prismaGetUserRepository = new PrismaGetUserRepository();
+  const getUserController = new GetUserController(prismaGetUserRepository);
 
   const { body, statusCode } = await getUserController.handle({
     params: req.params,
@@ -33,23 +32,27 @@ routes.get("/users/:id", async (req, res) => {
 });
 
 routes.post("/users", async (req, res) => {
-  const mongoCreateUserRepository = new MongoCreateUserRepository();
+  const prismaCreateUserRepository = new PrismaCreateUserRepository();
 
   const createUserController = new CreateUserController(
-    mongoCreateUserRepository
+    prismaCreateUserRepository
   );
+
+  console.log("CREATE USER");
 
   const { body, statusCode } = await createUserController.handle({
     body: req.body,
   });
 
+  console.log("CREATE USER FINAL STEP");
+  console.log(`body: ${body}`);
   res.status(statusCode).send(body);
 });
 
 routes.patch("/users/:id", async (req, res) => {
-  const mongoUpdateUserRepository = new MongoUpdateRepository();
+  const prismaUpdateUserRepository = new PrismaUpdateRepository();
   const updateUserController = new UpdateUserController(
-    mongoUpdateUserRepository
+    prismaUpdateUserRepository
   );
 
   const { body, statusCode } = await updateUserController.handle({
@@ -61,9 +64,9 @@ routes.patch("/users/:id", async (req, res) => {
 });
 
 routes.delete("/users/:id", async (req, res) => {
-  const mongoDeleteUserRepository = new MongoDeleteUserRepository();
+  const prismaDeleteUserRepository = new PrismaDeleteUserRepository();
   const deleteUserController = new DeleteUserController(
-    mongoDeleteUserRepository
+    prismaDeleteUserRepository
   );
 
   const { body, statusCode } = await deleteUserController.handle({
