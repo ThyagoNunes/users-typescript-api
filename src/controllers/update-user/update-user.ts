@@ -4,7 +4,7 @@ import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { IUpdateUserRepository, UpdateUserParams } from "./protocols";
 
 export class UpdateUserController implements IController {
-  constructor(private readonly updateUserRepository: IUpdateUserRepository) {}
+  constructor(private readonly updateUserRepository: IUpdateUserRepository) { }
   /* validar username, email, bcrypt, jwt */
   async handle(
     httpRequest: HttpRequest<UpdateUserParams>

@@ -5,7 +5,7 @@ import { CreateUserParams, ICreateUserRepository } from "./protocols";
 import { badRequest, created } from "../helpers";
 
 export class CreateUserController implements IController {
-  constructor(private readonly createUserRepository: ICreateUserRepository) {}
+  constructor(private readonly createUserRepository: ICreateUserRepository) { }
 
   async handle(
     httpRequest: HttpRequest<CreateUserParams>

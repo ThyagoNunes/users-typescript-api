@@ -4,7 +4,7 @@ import { HttpResponse, IController } from "../protocols";
 import { IGetUsersRepository } from "./protocols";
 
 export class GetUsersController implements IController {
-  constructor(private readonly getUsersRepository: IGetUsersRepository) {}
+  constructor(private readonly getUsersRepository: IGetUsersRepository) { }
 
   async handle(): Promise<HttpResponse<User[] | string>> {
     try {

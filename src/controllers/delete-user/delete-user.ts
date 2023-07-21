@@ -4,7 +4,7 @@ import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { IDeleteUserRepository } from "./protocols";
 
 export class DeleteUserController implements IController {
-  constructor(private readonly deleteUserRepository: IDeleteUserRepository) {}
+  constructor(private readonly deleteUserRepository: IDeleteUserRepository) { }
   async handle(
     httpRequest: HttpRequest<any>
   ): Promise<HttpResponse<User | string>> {
