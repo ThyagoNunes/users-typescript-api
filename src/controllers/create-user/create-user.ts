@@ -24,21 +24,32 @@ export class CreateUserController implements IController {
         "phone",
       ];
 
-      /* for (const field of requiredFields) {
-        if (!httpRequest?.body?.[field as keyof CreateUserParams]?.len) {
+      /* Se mexer no FOR abaixo o c* vai ser rasgado por JIROMBAS CARCERARIAS*/
+      for (const field of requiredFields) {
+        if (
+          !httpRequest?.body?.[
+            field as keyof CreateUserParams
+          ]?.toLocaleString()
+        ) {
           return badRequest(`Field ${field} is required`);
         }
-      } */
-      if ([httpRequest.body].includes(httpRequest.body))
-        console.log(requiredFields);
-
-      // Verify if size first and lastName is valid
-      const sizeFirstName = httpRequest.body!.firstName.length;
-      const sizeLastName = httpRequest.body!.lastName.length;
-
-      if (sizeFirstName && sizeLastName < 2) {
-        return badRequest("Min char 2");
       }
+
+      /*    stoppped here */
+      const { firstName, lastName } = httpRequest.body;
+
+      if (firstName.length < 3) {
+        return badRequest(
+          `Firstname needs min size 3 e não ${firstName.length}: ${firstName}`
+        );
+      }
+
+      if (lastName.length < 3) {
+        return badRequest(
+          `Lastname needs min size 3 e não ${lastName.length}: ${lastName}`
+        );
+      }
+
       // Verify if email is secure
       const emailIsValid = validator.isEmail(httpRequest.body!.email);
 
@@ -63,18 +74,11 @@ export class CreateUserController implements IController {
         );
       }
 
-      console.log(
-        `foi pro repository usuário: ${httpRequest?.body?.firstName}`
-      );
-
       const user = await this.createUserRepository.createUser(httpRequest.body);
 
-      console.log(`user: ${user}`);
-      console.log("retornou do banco");
       return created<User>(user);
     } catch (error) {
-      console.log("this inside from catch");
-      return badRequest("sexo");
+      return badRequest("Fudeo papai");
     }
   }
 }

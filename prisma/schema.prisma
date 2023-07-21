@@ -34,29 +34,29 @@ enum gender {
 
 model User {
   // info pessoal
-  id            String      @id @default(uuid()) @db.Uuid
-  firstName     String      @map("first_name")
-  lastName      String      @map("last_name")
-  username      String      @unique
-  email         String      @unique
+  id            String     @id @default(uuid()) @db.Uuid
+  firstName     String     @map("first_name")
+  lastName      String     @map("last_name")
+  username      String     @unique
+  email         String     @unique
   password      String
   phone         String
-  bornDay       Int?        @map("born_day")
-  bornMonth     Int?        @map("born_month")
-  bornYear      Int?        @map("born_year")
-  age           Int?
-  height        Float?
-  color         skinColors?
-  sexual        gender?
-  father        String?
-  mother        String?
+  bornDay       Int        @map("born_day")
+  bornMonth     Int        @map("born_month")
+  bornYear      Int        @map("born_year")
+  age           Int
+  height        Float
+  color         skinColors
+  sexual        gender
+  father        String
+  mother        String
   son           String?
-  country       String?
-  state         String?
-  city          String?
-  address       String?
-  numberAddress Int?        @map("number_address")
-  zipCode       String?     @map("zip_code")
+  country       String
+  state         String
+  city          String
+  address       String
+  numberAddress Int        @map("number_address")
+  zipCode       String     @map("zip_code")
 
   @@map("users")
 }

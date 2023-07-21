@@ -29,7 +29,6 @@ export class PrismaUpdateRepository implements IUpdateUserRepository {
       numberAddress,
       zipCode,
     } = params;
-
     const updateUser = await prisma.user.update({
       where: {
         id,

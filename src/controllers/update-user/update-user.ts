@@ -1,5 +1,5 @@
 import { User } from "../../models/users";
-import { /* badRequest */ ok, serverError } from "../helpers";
+import { /* badRequest */ badRequest, ok, serverError } from "../helpers";
 import { HttpRequest, HttpResponse, IController } from "../protocols";
 import { IUpdateUserRepository, UpdateUserParams } from "./protocols";
 
@@ -15,8 +15,8 @@ export class UpdateUserController implements IController {
         firstName,
         lastName,
         password,
-        /*  username,
-        email, */
+        username,
+        email,
         phone,
         bornDay,
         bornMonth,
@@ -59,11 +59,9 @@ export class UpdateUserController implements IController {
         zipCode,
       };
 
-      console.log(allowedFieldsToUpdate);
-
-      /*  if (username !== undefined || email !== undefined) {
+      if (username !== undefined || email !== undefined) {
         return badRequest("Cannot change username or email");
-      } */
+      }
 
       const user = await this.updateUserRepository.updateUser(
         id,

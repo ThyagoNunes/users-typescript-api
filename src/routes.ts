@@ -38,14 +38,10 @@ routes.post("/users", async (req, res) => {
     prismaCreateUserRepository
   );
 
-  console.log("CREATE USER");
-
   const { body, statusCode } = await createUserController.handle({
     body: req.body,
   });
 
-  console.log("CREATE USER FINAL STEP");
-  console.log(`body: ${body}`);
   res.status(statusCode).send(body);
 });
 

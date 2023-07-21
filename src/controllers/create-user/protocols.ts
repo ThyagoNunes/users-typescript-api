@@ -8,22 +8,22 @@ export interface CreateUserParams {
   email: string;
   password: string;
   phone: string;
-  bornDay?: number;
-  bornMonth?: number;
-  bornYear?: number;
-  age?: number;
-  height?: number;
-  color?: skinColors;
-  sexual?: gender;
-  father?: string;
-  mother?: string;
+  bornDay: number;
+  bornMonth: number;
+  bornYear: number;
+  age: number;
+  height: number;
+  color: skinColors;
+  sexual: gender;
+  father: string;
+  mother: string;
   son?: string | null;
-  country?: string;
-  state?: string;
-  city?: string;
-  address?: string;
-  numberAddress?: number;
-  zipCode?: string;
+  country: string;
+  state: string;
+  city: string;
+  address: string;
+  numberAddress: number;
+  zipCode: string;
 }
 
 export interface ICreateUserRepository {
